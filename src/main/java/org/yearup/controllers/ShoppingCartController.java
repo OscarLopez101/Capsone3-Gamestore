@@ -11,6 +11,7 @@ import org.yearup.models.User;
 
 import java.security.Principal;
 
+@CrossOrigin(origins = "http://localhost:63342")
 @RestController
 @RequestMapping("/cart")
 // "only logged in users should have access" per capstone :contentReference[oaicite:3]{index=3}
@@ -48,22 +49,11 @@ public class ShoppingCartController
 
     // POST http://localhost:8080/cart/products/15  (adds or increments) :contentReference[oaicite:5]{index=5}
     @PostMapping("/products/{productId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void addProductToCart(@PathVariable int productId, Principal principal)
+    public ShoppingCart addProductToCart(@PathVariable int productId, Principal principal)
     {
-        try
-        {
-            int userId = getUserId(principal);
-            shoppingCartDao.addProduct(userId, productId);
-        }
-        catch (ResponseStatusException e)
-        {
-            throw e;
-        }
-        catch (Exception e)
-        {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
-        }
+        int userId = getUserId(principal);
+        shoppingCartDao.addProduct(userId, productId);
+        return shoppingCartDao.getByUserId(userId);
     }
 
     // PUT http://localhost:8080/cart/products/15  body: {"quantity": 3} :contentReference[oaicite:6]{index=6}
