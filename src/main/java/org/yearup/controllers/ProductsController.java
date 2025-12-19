@@ -81,7 +81,8 @@ public class ProductsController
     {
         try
         {
-            productDao.create(product);
+            // optional but recommended: ensure request body can't "lie" about the id
+            productDao.update(id, product);
         }
         catch(Exception ex)
         {
